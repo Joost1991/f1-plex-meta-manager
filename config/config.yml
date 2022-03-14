@@ -1,5 +1,5 @@
 libraries:
-  Formule 1:
+  Formula 1:
     metadata_path:
       - file: config/Formula1.yml
 settings:
