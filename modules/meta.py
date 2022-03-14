@@ -61,128 +61,120 @@ def get_dict(attribute, attr_data, check_list=None):
 
 
 def resolve_formula1_title(title):
-    if "cafe" in title.lower():
-        return "Formule 1 Cafe"
-    if "fp1" in title.lower() or "vt1" in title.lower() or "vrije training 1" in title.lower():
-        return "Vrije Training 1"
-    if "fp2" in title.lower() or "vt2" in title.lower() or "vrije training 2" in title.lower():
-        return "Vrije Training 2"
-    if "fp3" in title.lower() or "vt3" in title.lower() or "vrije training 3" in title.lower():
-        return "Vrije Training 3"
+    if "fp1" in title.lower() or "free practice 1" in title.lower():
+        return "Free Practice 1"
+    if "fp2" in title.lower() or "free practice 2" in title.lower():
+        return "Free Practice 2"
+    if "fp3" in title.lower() or "free practice 3" in title.lower():
+        return "Free Practice 3"
     if "sprint" in title.lower():
-        if "voorbeschouwing" in title.lower():
-            return "Sprint voorbeschouwing"
-        if "nabeschouwing" in title.lower():
-            return "Sprint nabeschouwing"
-        return "Sprint Kwalificatie"
-    if "kwalificatie" in title.lower():
-        if "voorbeschouwing" in title.lower():
-            return "Kwalificatie voorbeschouwing"
-        if "nabeschouwing" in title.lower():
-            return "Kwalificatie nabeschouwing"
+        if "pre" in title.lower():
+            return "Pre-Sprint Build-up"
+        if "post" in title.lower():
+            return "Post-Sprint Analysis"
+        return "Sprint Qualifying"
+    if "quali" in title.lower():
+        if "pre" in title.lower():
+            return "Pre-Qualifying Build-up"
+        if "post" in title.lower():
+            return "Post-Qualifying Analysis"
         if "2160" in title.lower() or "4K" in title.lower():
-            return "Kwalificatie (4K)"
-        return "Kwalificatie"
-    if "seizoensvoorbeschouwing" in title.lower():
-        return "Seizoensvoorbeschouwing"
-    if "voorbeschouwing" in title.lower():
-        return "Voorbeschouwing"
-    if "nabeschouwing" in title.lower():
-        return "Nabeschouwing"
-    if "vanaf de grid" in title.lower():
-        return "Vanaf de grid"
-    if "summary" in title.lower() or "samenvatting" in title.lower() or "hoogtepunten" in title.lower():
-        return "Samenvatting"
+            return "Qualifying (4K)"
+        return "Qualifying Session"
+    if "summary" in title.lower() or "highlight" in title.lower():
+        return "Highlights"
     if "race" in title.lower():
         if "2160" in title.lower() or "4K" in title.lower():
-            return "Race (4K)"
-        return "Race"
-    return "Race"
+            return "Race Session (4K)"
+        return "Race Session"
+    return "Race Session"
 
 
 def get_race_title(race_info):
     race_name = race_info["raceName"].lower()
     result = "%02d" % (int(race_info["round"]),) + " - "
     if "belgian" in race_name:
-        return result + "GP België"
+        return result + "Belgian GP"
     elif "hungarian" in race_name:
-        return result + "GP Hongarije"
+        return result + "Hungarian GP"
     elif "british" in race_name:
-        return result + "GP Groot-Brittannië"
+        return result + "British GP"
     elif "bahrain" in race_name:
-        return result + "GP Bahrein"
+        return result + "Bahrain GP"
     elif "emilia" in race_name:
-        return result + "GP Emilia Romagna"
+        return result + "Emilia Romagna GP"
     elif "portuguese" in race_name:
-        return result + "GP Portugal"
+        return result + "Portuguese GP"
     elif "spanish" in race_name:
-        return result + "GP Spanje"
+        return result + "Spanish GP"
     elif "monaco" in race_name:
-        return result + "GP Monaco"
+        return result + "Monaco GP"
     elif "french" in race_name:
-        return result + "GP Frankrijk"
+        return result + "French GP"
     elif "styrian" in race_name:
-        return result + "GP Stiermarken"
+        return result + "Styrian GP"
     elif "austria" in race_name:
-        return result + "GP Oostenrijk"
+        return result + "Austrian GP"
     elif "dutch" in race_name:
-        return result + "GP Nederland"
+        return result + "Dutch GP"
     elif "italia" in race_name:
-        return result + "GP Italië"
+        return result + "Italian GP"
     elif "russia" in race_name:
-        return result + "GP Rusland"
+        return result + "Russian GP"
     elif "turkish" in race_name:
-        return result + "GP Turkije"
+        return result + "Turkish GP"
     elif "united states" in race_name:
-        return result + "GP Verenigde Staten"
+        return result + "United States GP"
     elif "mexic" in race_name:
-        return result + "GP Mexico"
+        if "city" in race_name:
+            return result + "Mexico City GP"
+        return result + "Mexican GP"
     elif "brazil" in race_name:
-        return result + "GP Brazilië"
+        return result + "Brazilian GP"
     elif "paulo" in race_name:
-        return result + "GP Brazilië"
+        return result + "São Paulo GP"
     elif "japan" in race_name:
-        return result + "GP Japan"
-    elif "saudi" in race_name:
-        return result + "GP Saudi Arabië"
+        return result + "Japanese GP"
     elif "abu dhabi" in race_name:
-        return result + "GP Abu Dhabi"
+        return result + "Abu Dhabi GP"
     elif "70th anniversary" in race_name:
         return result + "70th Anniversary GP"
     elif "chinese" in race_name:
-        return result + "GP China"
+        return result + "Chinese GP"
     elif "azerbaijan" in race_name:
-        return result + "GP Azerbeidzjan"
+        return result + "Azerbaijan GP"
     elif "german" in race_name:
-        return result + "GP Duitsland"
+        return result + "German GP"
     elif "singapore" in race_name:
-        return result + "GP Singapore"
+        return result + "Singapore GP"
     elif "canadian" in race_name:
-        return result + "GP Canada"
+        return result + "Canadian GP"
     elif "malaysian" in race_name:
-        return result + "GP Maleisië"
+        return result + "Malaysian GP"
     elif "european" in race_name:
-        return result + "GP Europa"
+        return result + "European GP"
     elif "san marino" in race_name:
-        return result + "GP San Marino"
+        return result + "San Marino GP"
     elif "korean" in race_name:
-        return result + "GP Zuid-Korea"
+        return result + "Korean GP"
     elif "india" in race_name:
-        return result + "GP India"
+        return result + "Indian GP"
     elif "australia" in race_name:
-        return result + "GP Australië"
+        return result + "Australian GP"
     elif "south africa" in race_name:
-        return result + "GP Zuid-Afrika"
+        return result + "South African GP"
     elif "pacific" in race_name:
-        return result + "GP Pacific"
+        return result + "Pacific GP"
     elif "argentin" in race_name:
-        return result + "GP Argentinië"
+        return result + "Argentinian GP"
     elif "luxem" in race_name:
-        return result + "GP Luxemburg"
+        return result + "Luxembourg GP"
     elif "qatar" in race_name:
-        return result + "GP Qatar"
+        return result + "Qatar GP"
     elif "saudi" in race_name:
-        return result + "GP Saudi-Arabië"
+        return result + "Saudi Arabian GP"
+    elif "miami" in race_name:
+        return result + "Miami GP"
     return result + race_info["raceName"]
 
 
@@ -190,14 +182,14 @@ def resolve_session_date(race_date, title, sprint_weekend=False):
     title = title.lower()
 
     if sprint_weekend:
-        if "sprint" in title or "vrije training 2" in title:
+        if "sprint" in title or "free practice 2" in title:
             return race_date - timedelta(days=1)
-        if "vrije training 1" in title or "kwalificatie" in title or "cafe" in title:
+        if "free practice 1" in title or "quali" in title:
             return race_date - timedelta(days=2)
     else:
-        if "kwalificatie" in title or "vrije training 3" in title:
+        if "quali" in title or "free practice 3" in title:
             return race_date - timedelta(days=1)
-        if "vrije training 1" in title or "vrije training 2" in title or "cafe" in title:
+        if "free practice 1" in title or "free practice 2" in title:
             return race_date - timedelta(days=2)
     return race_date
 
