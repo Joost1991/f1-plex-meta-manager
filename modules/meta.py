@@ -680,63 +680,6 @@ class MetadataFile(DataFile):
         if not self.metadata:
             return None
 
-        def process_f1():
-            if "f1_auto_titles" in methods:
-                logger.info("Setting auto titles for F1 library")
-                season_url = "http://ergast.com/api/f1/" + str(item.year) + ".json"
-                season_response = requests.get(season_url)
-                season_json = json.loads(season_response.text)
-                for season in item.seasons():
-                    if season.seasonNumber is 0:
-                        continue
-                    logger.info("")
-                    logger.info("Updating " + season.title)
-                    sprint_weekend = False
-                    for episode in season.episodes():
-                        try:
-                            item.episode(season=season.seasonNumber, episode=episode.episodeNumber)
-                        except NotFound:
-                            logger.error(f"Metadata Error: episode {episode_id} of season {season_id} not found")
-                        if "sprint" in episode.locations[0].lower():
-                            logger.info("This is a sprint weekend")
-                            sprint_weekend = True
-                            break
-                    if len(season_json["MRData"]["RaceTable"]["Races"]) > (season.seasonNumber - 1):
-                        race_info = season_json["MRData"]["RaceTable"]["Races"][season.seasonNumber - 1]
-                        race_date = datetime.strptime(race_info["date"], '%Y-%m-%d')
-                        title = get_race_title(race_info)
-                        updated = False
-                        if season.title != title:
-                            edits = {}
-                            add_edit("title", season.title, {'title': 'title'}, {'title': title}, value=title)
-                            if self.library.edit_item(season, f"{season.seasonNumber}", "Season", edits):
-                                updated = True
-                        logger.info(f"Race {season.seasonNumber} of {mapping_name}: Details Update {'Complete' if updated else 'Not Needed'}")
-                        # Processing individual races of this season
-                        for episode in season.episodes():
-                            edits = {}
-                            # Check if any files are available
-                            if len(episode.locations) > 0:
-                                # Resolve session title
-                                title = resolve_formula1_title(episode.locations[0])
-                                if title is None:
-                                    continue
-                                if title != episode.title:
-                                    add_edit("title", episode.title, {'title': 'title'}, {'title': title}, value=title)
-                                # Resolve the session date (FP, Q or R)
-                                session_date = resolve_session_date(race_date, title, sprint_weekend)
-                                if session_date is not None and session_date != episode.originallyAvailableAt:
-                                    add_edit("originally_available", (episode.originallyAvailableAt.strftime("%Y-%m-%d") if episode.originallyAvailableAt is not None else ""),
-                                             {'originally_available': 'originally_available'},
-                                             {'originally_available': 'originally_available'}, key="originallyAvailableAt", value=session_date)
-                                if self.library.edit_item(episode,
-                                                          f"{season.seasonNumber} Episode: {episode.episodeNumber}",
-                                                          "Season", edits):
-                                    updated = True
-                                logger.info(f"Session {episode.title}: Details Update {'Complete' if updated else 'Not Needed'}")
-                    else:
-                        logger.info("Not part of season: " + season.title)
-
         logger.info("")
         logger.separator("Running Metadata")
         logger.info("")
@@ -745,6 +688,61 @@ class MetadataFile(DataFile):
 
             updated = False
             edits = {}
+
+            def process_f1():
+                if "f1_auto_titles" in methods:
+                    logger.info("Setting auto titles for F1 library")
+                    season_url = "http://ergast.com/api/f1/" + str(item.year) + ".json"
+                    season_response = requests.get(season_url)
+                    season_json = json.loads(season_response.text)
+                    for season in item.seasons():
+                        if season.seasonNumber is 0:
+                            continue
+                        logger.info("")
+                        logger.info("Updating " + season.title)
+                        sprint_weekend = False
+                        for episode in season.episodes():
+                            try:
+                                item.episode(season=season.seasonNumber, episode=episode.episodeNumber)
+                            except NotFound:
+                                logger.error(f"Metadata Error: episode {episode_id} of season {season_id} not found")
+                            if "sprint" in episode.locations[0].lower():
+                                logger.info("This is a sprint weekend")
+                                sprint_weekend = True
+                                break
+                        if len(season_json["MRData"]["RaceTable"]["Races"]) > (season.seasonNumber - 1):
+                            race_info = season_json["MRData"]["RaceTable"]["Races"][season.seasonNumber - 1]
+                            race_date = datetime.strptime(race_info["date"], '%Y-%m-%d')
+                            title = get_race_title(race_info)
+                            updated = False
+                            if season.title != title:
+                                add_edit("title", season.title, {'title': 'title'}, {'title': title}, value=title)
+                                if self.library.edit_item(season, mapping_name, self.library.type, edits):
+                                    updated = True
+                            logger.info(f"Race {season.seasonNumber} of {mapping_name}: Details Update {'Complete' if updated else 'Not Needed'}")
+                            # Processing individual races of this season
+                            for episode in season.episodes():
+                                # Check if any files are available
+                                if len(episode.locations) > 0:
+                                    # Resolve session title
+                                    title = resolve_formula1_title(episode.locations[0])
+                                    if title is None:
+                                        continue
+                                    if title != episode.title:
+                                        add_edit("title", episode.title, {'title': 'title'}, {'title': title}, value=title)
+                                    # Resolve the session date (FP, Q or R)
+                                    session_date = resolve_session_date(race_date, title, sprint_weekend)
+                                    if session_date is not None and session_date != episode.originallyAvailableAt:
+                                        add_edit("originally_available", (episode.originallyAvailableAt.strftime("%Y-%m-%d") if episode.originallyAvailableAt is not None else ""),
+                                                 {'originally_available': 'originally_available'},
+                                                 {'originally_available': 'originally_available'}, key="originallyAvailableAt", value=session_date)
+                                    if self.library.edit_item(episode,
+                                                              f"{season.seasonNumber} Episode: {episode.episodeNumber}",
+                                                              "Season", edits):
+                                        updated = True
+                                    logger.info(f"Session {episode.title}: Details Update {'Complete' if updated else 'Not Needed'}")
+                        else:
+                            logger.info("Not part of season: " + season.title)
 
             def add_edit(name, current_item, group, alias, key=None, value=None, var_type="str"):
                 if value or name in alias:
